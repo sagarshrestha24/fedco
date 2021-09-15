@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fedco-devcentral-app-local  
+  labels:
+    app: fedco-devcentral-app-local
+  annotations:
+    fluxcd.io/automated: "true"    
+    fluxcd.io/tag.fedco-devcentral-app: semver:~1.1
+spec:
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+    type: RollingUpdate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fedco-devcentral-app-local
+  template:
+    metadata:
+      name: fedco-devcentral-app-pod
+      labels:
+        app: fedco-devcentral-app-local
+    spec:
+      containers:
+      - name: fedco-devcentral-app
+        image: sagark24/fedco-app:1.1.0
+        ports:
+          - containerPort: 3000
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: config-js-volume
+            mountPath: /app/build/config.js
+            subPath: local.js        
+
+      volumes:
+        - name: config-js-volume
+          configMap:
+            name: local-configmap
+

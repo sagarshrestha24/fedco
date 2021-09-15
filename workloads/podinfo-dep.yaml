@@ -1,12 +1,14 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: fedco
   name: fedco-devcentral-app-local  
   labels:
     app: fedco-devcentral-app-local
   annotations:
     fluxcd.io/automated: "true"    
-    fluxcd.io/tag.fedco-devcentral-app: semver:~1.1
+    fluxcd.io/tag.fedco-devcentral: semver:~1.1
 spec:
   strategy:
     rollingUpdate:
@@ -23,8 +25,8 @@ spec:
         app: fedco-devcentral-app-local
     spec:
       containers:
-      - name: fedco-devcentral-app
-        image: sagark24/fedco-app:1.1.0
+      - name: fedco-devcentral
+        image: sagark24/fedco-app:1.1.1
         ports:
           - containerPort: 3000
         imagePullPolicy: Always
